@@ -66,5 +66,30 @@ SELECT * FROM Empresa JOIN Endereco as end
     join Toten as t
     on Empresa.fkEmpresa = t.idEmpresa;
     
+    SELECT Empresa.razaoSocial, Empresa.nome, Endereco.cep, TotenMedidas.cpuUso
+FROM Empresa
+JOIN Endereco ON Empresa.fkEndereco = Endereco.idEndereco
+LEFT JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
+LEFT JOIN TotenMedidas ON Toten.idToten = TotenMedidas.fkToten
+WHERE Empresa.nome = "Teste01";
+
+SELECT Empresa.razaoSocial, Toten.cpuTotal, Toten.ramTotal
+FROM Empresa
+JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
+WHERE Toten.Ativo = 1;
+
+SELECT Empresa.razaoSocial, medidaEmpresa.medidaNome, Temp.tempMedida
+FROM Empresa
+JOIN medidaEmpresa ON Empresa.idEmpresa = medidaEmpresa.fkEmpresa
+JOIN Temp ON medidaEmpresa.fkTemp = Temp.idTemp
+WHERE Temp.idTemp BETWEEN 'data_inicial' AND 'data_final';
+
+SELECT Empresa.razaoSocial, TotenMedidas.cpuUso, TotenMedidas.idDataHora
+FROM Empresa
+JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
+JOIN TotenMedidas ON Toten.idToten = TotenMedidas.fkToten
+WHERE Empresa.nome = "Teste01" AND TotenMedidas.idDataHora BETWEEN 'data_inicial' AND 'data_final';
+
+    
 
     
