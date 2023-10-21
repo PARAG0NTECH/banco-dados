@@ -1,95 +1,157 @@
-CREATE DATABASE ParagonTech;
-USE ParagonTech;
+CREATE DATABASE cineguardian;
+USE cineguardian;
 
-CREATE TABLE Empresa(
-idEmpresa INT PRIMARY KEY auto_increment,
-fkEndereco INT,
-razaoSocial VARCHAR(45),
-cnpj VARCHAR(14),
-nome VARCHAR(45),
-email VARCHAR(80),
-senha VARCHAR(45),
-	FOREIGN KEY (fkEndereco) REFERENCES Endereco(idEndereco)
+CREATE TABLE tb_users (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255)
 );
 
-CREATE TABLE TotenMedidas(
-idDataHora DATETIME PRIMARY KEY,
-fkToten INT,
-cpuUso DOUBLE,
-ramUso DOUBLE,
-discoUso DOUBLE,
-internetUso DOUBLE,
-	FOREIGN KEY(fkToten) REFERENCES Toten(idToten)
+CREATE TABLE tb_address (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    cep VARCHAR(255),
+    neighborhood VARCHAR(255),
+    number VARCHAR(255),
+    street VARCHAR(255),
+    compl VARCHAR(255),
+    city VARCHAR(255)
 );
 
-CREATE TABLE Endereco(
-idEndereco INT PRIMARY KEY auto_increment,
-cep VARCHAR(8),
-numero int,
-nomeRua VARCHAR(45),
-complemento Varchar(45),
-bairro varchar(45),
-cidade varchar(45)
+CREATE TABLE tb_companies (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_address INTEGER,
+    name VARCHAR(255),
+    cnpj VARCHAR(255),
+    FOREIGN KEY (id_address) REFERENCES tb_address (id)
 );
 
-CREATE TABLE Toten(
-idToten INT PRIMARY KEY auto_increment,
-Ativo BOOLEAN,
-soTotal VARCHAR(45),
-cpuTotal DOUBLE,
-ramTotal DOUBLE,
-discoTotal DOUBLE,
-fkEmpresa INT,
-	FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
+CREATE TABLE tb_cpu (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255)
 );
 
-CREATE TABLE Temp(
-idTemp int primary key auto_increment,
-tempMedida int
+CREATE TABLE tb_disk (
+    id VARCHAR(255) PRIMARY KEY,
+    model VARCHAR(255)
 );
 
-CREATE TABLE medidaEmpresa(
-fkEmpresa int,
-fkTemp int,
-medidaNome varchar(45),
-	FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa),
-    FOREIGN KEY (fkTemp) REFERENCES Temp (idTemp)
+CREATE TABLE tb_computers (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_cpu VARCHAR(255),
+    id_disk VARCHAR(255),
+    hostname VARCHAR(255),
+    maker VARCHAR(255),
+    system_info VARCHAR(255),
+    FOREIGN KEY (id_cpu) REFERENCES tb_cpu (id),
+    FOREIGN KEY (id_disk) REFERENCES tb_disk (id)
 );
 
-INSERT INTO Empresa (fkEndereco, nome) values
-	(1, "Teste01");
 
-SELECT * FROM Empresa JOIN Endereco as end 
-	ON fkEndereco = idEndereco
-	JOIN medidasEmpresas
-    on Empresa.fkEmpresa = end.idEmpresa
-    join Toten as t
-    on Empresa.fkEmpresa = t.idEmpresa;
-    
-    SELECT Empresa.razaoSocial, Empresa.nome, Endereco.cep, TotenMedidas.cpuUso
-FROM Empresa
-JOIN Endereco ON Empresa.fkEndereco = Endereco.idEndereco
-LEFT JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
-LEFT JOIN TotenMedidas ON Toten.idToten = TotenMedidas.fkToten
-WHERE Empresa.nome = "Teste01";
+CREATE TABLE tb_statistics (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_computer INTEGER,
+    temperature DOUBLE,
+    cpu_usage DOUBLE,
+    ram_usage DOUBLE,
+    ram_available DOUBLE,
+    ram_total DOUBLE,
+    disk_total DOUBLE,
+    disk_usage DOUBLE,
+    FOREIGN KEY (id_computer) REFERENCES tb_computers (id)
+);
 
-SELECT Empresa.razaoSocial, Toten.cpuTotal, Toten.ramTotal
-FROM Empresa
-JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
-WHERE Toten.Ativo = 1;
+CREATE TABLE tb_network (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_computer INTEGER,
+    name VARCHAR(255),
+    mac_address VARCHAR(255),
+    packages_received INTEGER,
+    packages_sent INTEGER,
+    FOREIGN KEY (id_computer) REFERENCES  tb_computers (id)
+);
 
-SELECT Empresa.razaoSocial, medidaEmpresa.medidaNome, Temp.tempMedida
-FROM Empresa
-JOIN medidaEmpresa ON Empresa.idEmpresa = medidaEmpresa.fkEmpresa
-JOIN Temp ON medidaEmpresa.fkTemp = Temp.idTemp
-WHERE Temp.idTemp BETWEEN 'data_inicial' AND 'data_final';
+SELECT * FROM tb_computers;
+SELECT * FROM tb_cpu;
+SELECT * FROM tb_disk;
+SELECT * FROM tb_statistics;
+SELECT * FROM tb_network;
+CREATE DATABASE cineguardian;
+USE cineguardian;
 
-SELECT Empresa.razaoSocial, TotenMedidas.cpuUso, TotenMedidas.idDataHora
-FROM Empresa
-JOIN Toten ON Empresa.idEmpresa = Toten.fkEmpresa
-JOIN TotenMedidas ON Toten.idToten = TotenMedidas.fkToten
-WHERE Empresa.nome = "Teste01" AND TotenMedidas.idDataHora BETWEEN 'data_inicial' AND 'data_final';
+CREATE TABLE tb_users (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255)
+);
 
-    
+CREATE TABLE tb_address (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    cep VARCHAR(255),
+    neighborhood VARCHAR(255),
+    number VARCHAR(255),
+    street VARCHAR(255),
+    compl VARCHAR(255),
+    city VARCHAR(255)
+);
 
-    
+CREATE TABLE tb_companies (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_address INTEGER,
+    name VARCHAR(255),
+    cnpj VARCHAR(255),
+    FOREIGN KEY (id_address) REFERENCES tb_address (id)
+);
+
+CREATE TABLE tb_cpu (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+CREATE TABLE tb_disk (
+    id VARCHAR(255) PRIMARY KEY,
+    model VARCHAR(255)
+);
+
+CREATE TABLE tb_computers (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_cpu VARCHAR(255),
+    id_disk VARCHAR(255),
+    hostname VARCHAR(255),
+    maker VARCHAR(255),
+    system_info VARCHAR(255),
+    FOREIGN KEY (id_cpu) REFERENCES tb_cpu (id),
+    FOREIGN KEY (id_disk) REFERENCES tb_disk (id)
+);
+
+
+CREATE TABLE tb_statistics (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_computer INTEGER,
+    temperature DOUBLE,
+    cpu_usage DOUBLE,
+    ram_usage DOUBLE,
+    ram_available DOUBLE,
+    ram_total DOUBLE,
+    disk_total DOUBLE,
+    disk_usage DOUBLE,
+    FOREIGN KEY (id_computer) REFERENCES tb_computers (id)
+);
+
+CREATE TABLE tb_network (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_computer INTEGER,
+    name VARCHAR(255),
+    mac_address VARCHAR(255),
+    packages_received INTEGER,
+    packages_sent INTEGER,
+    FOREIGN KEY (id_computer) REFERENCES  tb_computers (id)
+);
+
+SELECT * FROM tb_computers;
+SELECT * FROM tb_cpu;
+SELECT * FROM tb_disk;
+SELECT * FROM tb_statistics;
+SELECT * FROM tb_network;
+
