@@ -1,0 +1,248 @@
+-- -----------------------------------------------------
+-- Schema cineguardian
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'cineguardian')
+    EXEC('CREATE SCHEMA cineguardian')
+GO
+
+USE cineguardian
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_address
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_address]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_address] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [cep] VARCHAR(255) NULL,
+        [neighborhood] VARCHAR(255) NULL,
+        [number] VARCHAR(255) NULL,
+        [street] VARCHAR(255) NULL,
+        [compl] VARCHAR(255) NULL,
+        [city] VARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_users
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_users]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_users] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [name] VARCHAR(255) NULL,
+        [email] VARCHAR(255) NULL,
+        [type_user] VARCHAR(255) NULL,
+        [password] VARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_companies
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_companies]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_companies] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [id_address] INT NULL,
+        [tb_users_id] INT NOT NULL,
+        [name] VARCHAR(255) NULL,
+        [cnpj] VARCHAR(255) NULL,
+        PRIMARY KEY ([id]),
+        CONSTRAINT [fk_tb_companies_tb_users1]
+            FOREIGN KEY ([tb_users_id])
+            REFERENCES [cineguardian].[tb_users] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_cpu
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_cpu]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_cpu] (
+        [id] VARCHAR(255) NOT NULL,
+        [name] VARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_disk
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_disk]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_disk] (
+        [id] VARCHAR(255) NOT NULL,
+        [model] VARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_computers
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_computers]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_computers] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [tb_companies_id] INT NOT NULL,
+        [id_cpu] VARCHAR(255) NULL,
+        [id_disk] VARCHAR(255) NULL,
+        [hostname] VARCHAR(255) NULL,
+        [maker] VARCHAR(255) NULL,
+        [system_info] VARCHAR(255) NULL,
+        PRIMARY KEY ([id]),
+        CONSTRAINT [fk_tb_computers_tb_companies1]
+            FOREIGN KEY ([tb_companies_id])
+            REFERENCES [cineguardian].[tb_companies] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+        CONSTRAINT [fk_tb_computers_tb_cpu]
+            FOREIGN KEY ([id_cpu])
+            REFERENCES [cineguardian].[tb_cpu] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+        CONSTRAINT [fk_tb_computers_tb_disk]
+            FOREIGN KEY ([id_disk])
+            REFERENCES [cineguardian].[tb_disk] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+    )
+END
+GOAqui está o script convertido para o SQL Server:
+
+```sql
+-- -----------------------------------------------------
+-- Schema cineguardian
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'cineguardian')
+    EXEC('CREATE SCHEMA cineguardian')
+GO
+
+USE cineguardian
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_address
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_address]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_address] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [cep] NVARCHAR(255) NULL,
+        [neighborhood] NVARCHAR(255) NULL,
+        [number] NVARCHAR(255) NULL,
+        [street] NVARCHAR(255) NULL,
+        [compl] NVARCHAR(255) NULL,
+        [city] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_users
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_users]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_users] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [name] NVARCHAR(255) NULL,
+        [email] NVARCHAR(255) NULL,
+        [type_user] NVARCHAR(255) NULL,
+        [password] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_companies
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_companies]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_companies] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [id_address] INT NULL,
+        [tb_users_id] INT NOT NULL,
+        [name] NVARCHAR(255) NULL,
+        [cnpj] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id]),
+        CONSTRAINT [fk_tb_companies_tb_users1]
+            FOREIGN KEY ([tb_users_id])
+            REFERENCES [cineguardian].[tb_users] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_cpu
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_cpu]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_cpu] (
+        [id] NVARCHAR(255) NOT NULL,
+        [name] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_disk
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_disk]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_disk] (
+        [id] NVARCHAR(255) NOT NULL,
+        [model] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id])
+    )
+END
+GO
+
+-- -----------------------------------------------------
+-- Table cineguardian.tb_computers
+-- -----------------------------------------------------
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[cineguardian].[tb_computers]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [cineguardian].[tb_computers] (
+        [id] INT NOT NULL IDENTITY(1,1),
+        [tb_companies_id] INT NOT NULL,
+        [id_cpu] NVARCHAR(255) NULL,
+        [id_disk] NVARCHAR(255) NULL,
+        [hostname] NVARCHAR(255) NULL,
+        [maker] NVARCHAR(255) NULL,
+        [system_info] NVARCHAR(255) NULL,
+        PRIMARY KEY ([id]),
+        CONSTRAINT [fk_tb_computers_tb_companies1]
+            FOREIGN KEY ([tb_companies_id])
+            REFERENCES [cineguardian].[tb_companies] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+        CONSTRAINT [fk_tb_computers_tb_cpu]
+            FOREIGN KEY ([id_cpu])
+            REFERENCES [cineguardian].[tb_cpu] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+        CONSTRAINT [fk_tb_computers_tb_disk]
+            FOREIGN KEY ([id_disk])
+            REFERENCES [cineguardian].[tb_disk] ([id])
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+    )
+END
+GO
