@@ -43,8 +43,14 @@ CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_users` (
   `email` VARCHAR(255) NULL DEFAULT NULL,
   `type_user` VARCHAR(255) NULL DEFAULT NULL,
   `password` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  `fk_empresa` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_empresa` (`fk_empresa` ASC) VISIBLE,
+  CONSTRAINT `fk_empresa`
+    FOREIGN KEY (`fk_empresa`)
+    REFERENCES `cineguardian`.`tb_companies` (`id`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 15
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -59,16 +65,34 @@ CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_companies` (
   `name` VARCHAR(255) NULL DEFAULT NULL,
   `cnpj` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `id_address` (`id_address` ASC) ,
-  INDEX `fk_tb_companies_tb_users1_idx` (`tb_users_id` ASC) ,
-  CONSTRAINT `tb_companies_ibfk_1`
-    FOREIGN KEY (`id_address`)
-    REFERENCES `cineguardian`.`tb_address` (`id`),
+  INDEX `id_address` (`id_address` ASC) VISIBLE,
+  INDEX `fk_tb_companies_tb_users1_idx` (`tb_users_id` ASC) VISIBLE,
   CONSTRAINT `fk_tb_companies_tb_users1`
     FOREIGN KEY (`tb_users_id`)
-    REFERENCES `cineguardian`.`tb_users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `cineguardian`.`tb_users` (`id`),
+  CONSTRAINT `tb_companies_ibfk_1`
+    FOREIGN KEY (`id_address`)
+    REFERENCES `cineguardian`.`tb_address` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `cineguardian`.`tb_alerts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_alerts` (
+  `id` INT NOT NULL,
+  `tb_companies_id` INT NOT NULL,
+  `percentual_cpu` DOUBLE NULL DEFAULT NULL,
+  `percentual_disk` DOUBLE NULL DEFAULT NULL,
+  `percentual_ram` DOUBLE NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `tb_companies_id`),
+  INDEX `fk_tb_alerts_tb_companies1` (`tb_companies_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_alerts_tb_companies1`
+    FOREIGN KEY (`tb_companies_id`)
+    REFERENCES `cineguardian`.`tb_companies` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -110,20 +134,18 @@ CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_computers` (
   `maker` VARCHAR(255) NULL DEFAULT NULL,
   `system_info` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `id_cpu` (`id_cpu` ASC) ,
-  INDEX `id_disk` (`id_disk` ASC) ,
-  INDEX `fk_tb_computers_tb_companies1_idx` (`tb_companies_id` ASC) ,
+  INDEX `id_cpu` (`id_cpu` ASC) VISIBLE,
+  INDEX `id_disk` (`id_disk` ASC) VISIBLE,
+  INDEX `fk_tb_computers_tb_companies1_idx` (`tb_companies_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_computers_tb_companies1`
+    FOREIGN KEY (`tb_companies_id`)
+    REFERENCES `cineguardian`.`tb_companies` (`id`),
   CONSTRAINT `tb_computers_ibfk_1`
     FOREIGN KEY (`id_cpu`)
     REFERENCES `cineguardian`.`tb_cpu` (`id`),
   CONSTRAINT `tb_computers_ibfk_2`
     FOREIGN KEY (`id_disk`)
-    REFERENCES `cineguardian`.`tb_disk` (`id`),
-  CONSTRAINT `fk_tb_computers_tb_companies1`
-    FOREIGN KEY (`tb_companies_id`)
-    REFERENCES `cineguardian`.`tb_companies` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `cineguardian`.`tb_disk` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -140,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_network` (
   `packages_received` INT NULL DEFAULT NULL,
   `packages_sent` INT NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `id_computer` (`id_computer` ASC),
+  INDEX `id_computer` (`id_computer` ASC) VISIBLE,
   CONSTRAINT `tb_network_ibfk_1`
     FOREIGN KEY (`id_computer`)
     REFERENCES `cineguardian`.`tb_computers` (`id`))
@@ -163,31 +185,13 @@ CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_statistics` (
   `disk_total` DOUBLE NULL DEFAULT NULL,
   `disk_usage` DOUBLE NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `id_computer` (`id_computer` ASC) ,
+  INDEX `id_computer` (`id_computer` ASC) VISIBLE,
   CONSTRAINT `tb_statistics_ibfk_1`
     FOREIGN KEY (`id_computer`)
     REFERENCES `cineguardian`.`tb_computers` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `cineguardian`.`tb_alerts`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cineguardian`.`tb_alerts` (
-  `id` INT NOT NULL,
-  `tb_companies_id` INT NOT NULL,
-  `percentual_cpu` DOUBLE NULL,
-  `percentual_disk` DOUBLE NULL,
-  `percentual_ram` DOUBLE NULL,
-  PRIMARY KEY (`id`, `tb_companies_id`),
-  CONSTRAINT `fk_tb_alerts_tb_companies1`
-    FOREIGN KEY (`tb_companies_id`)
-    REFERENCES `cineguardian`.`tb_companies` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
